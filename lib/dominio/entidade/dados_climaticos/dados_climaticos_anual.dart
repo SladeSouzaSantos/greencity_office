@@ -1,4 +1,4 @@
-import 'climate_data.dart';
+import 'dados_climaticos.dart';
 
 class DadosClimaticosAnual{
 

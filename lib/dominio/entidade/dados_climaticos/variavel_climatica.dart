@@ -1,4 +1,4 @@
-import '../dates_data/mes.dart';
+import '../dados_comuns/mes.dart';
 
 abstract class VariavelClimatica{
   final double _valor;

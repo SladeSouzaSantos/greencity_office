@@ -1,4 +1,4 @@
-import '../dates_data/mes.dart';
+import '../dados_comuns/mes.dart';
 import 'variavel_climatica.dart';
 
 class Temperatura extends VariavelClimatica{
