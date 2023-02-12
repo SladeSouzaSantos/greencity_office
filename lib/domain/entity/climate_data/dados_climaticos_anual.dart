@@ -1,44 +1,44 @@
-import 'temperatura.dart';
-import 'umidade_relativa.dart';
-import 'variavel_climatica.dart';
+import 'climate_data.dart';
 
 class DadosClimaticosAnual{
 
-  final List<Temperatura> _listaTemperaturaMaxima, _listaTemperaturaMinima, _listaTemperaturaMedia;
+  final List<TemperaturaAnual> _listaTemperaturaAnual;
   final List<UmidadeRelativa> _listaUmidadeRelativa;
+  final List<HoraSolarPico> _listaHoraSolarPico;
 
   DadosClimaticosAnual({
-        required List<Temperatura> listaTemperaturaMaxima, required List<Temperatura> listaTemperaturaMinima,
-        required List<Temperatura> listaTemperaturaMedia, required List<UmidadeRelativa> listaUmidadeRelativa})
-      : _listaTemperaturaMaxima = listaTemperaturaMaxima, _listaTemperaturaMinima = listaTemperaturaMinima,
-        _listaTemperaturaMedia = listaTemperaturaMedia, _listaUmidadeRelativa = listaUmidadeRelativa;
+    required List<TemperaturaAnual> listaTemperaturaAnual, required List<UmidadeRelativa> listaUmidadeRelativa,
+    required List<HoraSolarPico> listaHoraSolarPico}) : _listaTemperaturaAnual = listaTemperaturaAnual,
+        _listaUmidadeRelativa = listaUmidadeRelativa, _listaHoraSolarPico = listaHoraSolarPico;
 
-  List<Temperatura> get listaTemperaturaMaxima => _listaTemperaturaMaxima;
-
-  List<Temperatura> get listaTemperaturaMinima => _listaTemperaturaMinima;
-
-  List<Temperatura> get listaTemperaturaMedia => _listaTemperaturaMedia;
+  List<TemperaturaAnual> get listaTemperaturaAnual => _listaTemperaturaAnual;
 
   List<UmidadeRelativa> get listaUmidadeRelativa => _listaUmidadeRelativa;
 
-  double get valorMedioTemperaturaMaxima => _valorMedioVariavelClimatica(_listaTemperaturaMaxima);
+  List<HoraSolarPico> get listaHoraSolarPico => _listaHoraSolarPico;
 
-  double get valorMedioTemperaturaMinima => _valorMedioVariavelClimatica(_listaTemperaturaMinima);
-
-  double get valorMedioTemperaturaMedia => _valorMedioVariavelClimatica(_listaTemperaturaMedia);
-
-  double get valorMedioUmidadeRelativa => _valorMedioVariavelClimatica(_listaUmidadeRelativa);
-
-  double _valorMedioVariavelClimatica(List<VariavelClimatica> listaVariavelClimatica){
+  double calcularMediaAnualVariavelClimatica({required List<VariavelClimatica> listaVariavelClimatica}){
     double somaValorVariavelClimatica = 0;
 
-    for (var temperatura in listaVariavelClimatica) {
-      somaValorVariavelClimatica += temperatura.valor;
+    for (var variavelClimatica in listaVariavelClimatica) {
+      somaValorVariavelClimatica += variavelClimatica.valor;
     }
 
     double valorMedioVariavelClimatica = somaValorVariavelClimatica/listaVariavelClimatica.length;
 
     return valorMedioVariavelClimatica;
+  }
+
+  double calcularMenorValorAnual({required List<VariavelClimatica> listaVariavelClimatica}){
+    return listaVariavelClimatica.reduce((variavelClimaticaReferencia, variavelClimaticaProximo) =>
+    variavelClimaticaReferencia.valor < variavelClimaticaProximo.valor ?
+    variavelClimaticaReferencia : variavelClimaticaProximo).valor;
+  }
+
+  double calcularMaiorValorAnual({required List<VariavelClimatica> listaVariavelClimatica}){
+    return listaVariavelClimatica.reduce((variavelClimaticaReferencia, variavelClimaticaProximo) =>
+    variavelClimaticaReferencia.valor > variavelClimaticaProximo.valor ?
+    variavelClimaticaReferencia : variavelClimaticaProximo).valor;
   }
 
 }
