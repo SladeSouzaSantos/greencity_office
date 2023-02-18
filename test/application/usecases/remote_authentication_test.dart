@@ -4,35 +4,8 @@ import 'package:test/test.dart';
 
 import 'package:greencity_sustentavel_office/domain/usecases/usecases.dart';
 
-class RemoteAuthentication{
-  final HttpClient httpClient;
-  final String url;
-
-  RemoteAuthentication(
-      {
-        required this.httpClient,
-        required this.url
-      });
-
-  Future<void> auth({required AuthenticationParams params}) async{
-    final body = {"email": params.email, "password": params.password};
-    await httpClient.request(
-      url: url,
-      method: "post",
-      body: body
-    );
-  }
-  
-}
-
-abstract class HttpClient{
-  Future<void>? request(
-      {
-        required String url,
-        required String method,
-        Map<String, dynamic> body
-      });
-}
+import 'package:greencity_sustentavel_office/application/http/http.dart';
+import 'package:greencity_sustentavel_office/application/usecases/usecases.dart';
 
 class HttpClientSpy extends Mock implements HttpClient{}
 
