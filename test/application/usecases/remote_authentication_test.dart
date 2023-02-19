@@ -39,7 +39,7 @@ void main(){
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test("Deve chamar UnexpectedError quando ClientGeneric retornar 400.", () async{
+  test("Deve chamar UnexpectedError quando ClientGeneric retornar 404.", () async{
     when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body"))).thenThrow(HttpError.notFound);
     final future = sut!.auth!(params: params!);
 
@@ -51,5 +51,12 @@ void main(){
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test("Deve chamar invalidCredentialsError quando ClientGeneric retornar 401.", () async{
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body"))).thenThrow(HttpError.unauthorized);
+    final future = sut!.auth!(params: params!);
+
+    expect(future, throwsA(DomainError.invalidCredentialsError));
   });
 }
