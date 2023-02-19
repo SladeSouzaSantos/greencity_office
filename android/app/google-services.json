@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "230236666103",
+    "project_id": "greencity-office",
+    "storage_bucket": "greencity-office.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230236666103:android:72867f8c2b4799abc7fbf2",
+        "android_client_info": {
+          "package_name": "greencity.sustentavel.office.greencity_sustentavel_office"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "230236666103-565isvr1m8dimkt5ogjce8qc9b45uqr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC76AxWU2-p6G6Ye4-_-PxqStFlP_APQew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "230236666103-565isvr1m8dimkt5ogjce8qc9b45uqr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
