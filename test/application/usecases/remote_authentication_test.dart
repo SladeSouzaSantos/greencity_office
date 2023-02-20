@@ -77,4 +77,14 @@ void main(){
 
     expect(account.token, accessToken);
   });
+
+  test("Deve chamar UnexpectedError quando ClientGeneric retornar 200 com dados inválidos.", () async{
+
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
+        .thenAnswer((_) async => {"invalid_key" : "invalid_value"});
+
+    final future = sut!.auth!(params: params!);
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
 }

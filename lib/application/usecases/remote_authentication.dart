@@ -28,9 +28,7 @@ class RemoteAuthentication{
           ? DomainError.invalidCredentialsError
           : DomainError.unexpected;
     }
-
   }
-
 }
 
 class RemoteAuthenticationParams{
