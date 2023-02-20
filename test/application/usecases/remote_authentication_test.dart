@@ -15,17 +15,28 @@ void main(){
   String? url;
   AuthenticationParams? params;
 
+  Map mockValidData() => {"accessToken" : faker.guid.guid(), "name" : faker.person.name()};
+
+  PostExpectation mockRequest() =>
+      when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")));
+
+  void mockClientGenericData(Map data){
+    return mockRequest().thenAnswer((_) async => data);
+  }
+
+  void mockClientGenericError(ClientError error){
+    return mockRequest().thenThrow(error);
+  }
+
   setUp((){
     clientGeneric = ClientGenericSpy();
     url = faker.internet.httpsUrl();
     sut = RemoteAuthentication(clientGeneric: clientGeneric!, url: url!);
     params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    mockClientGenericData(mockValidData());
   });
 
   test("Deve chamar ClientGeneric com valores corretos.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
-        .thenAnswer((_) async => {"accessToken" : faker.guid.guid(), "name" : faker.person.name()});
-
     await sut!.auth!(params: params!);
 
     verify(clientGeneric!.request!(
@@ -36,52 +47,45 @@ void main(){
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 400.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
-        .thenThrow(ClientError.badRequest);
+    mockClientGenericError(ClientError.badRequest);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 404.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
-        .thenThrow(ClientError.notFound);
+    mockClientGenericError(ClientError.notFound);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 500.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
-        .thenThrow(ClientError.serverError);
+    mockClientGenericError(ClientError.serverError);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar invalidCredentialsError quando ClientGeneric retornar 401.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
-        .thenThrow(ClientError.unauthorized);
+    mockClientGenericError(ClientError.unauthorized);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.invalidCredentialsError));
   });
 
   test("Deve retornar um Account quando ClientGeneric retornar 200.", () async{
-    final accessToken = faker.guid.guid();
-
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
-        .thenAnswer((_) async => {"accessToken" : accessToken, "name" : faker.person.name()});
+    final validData = mockValidData();
+    mockClientGenericData(validData);
 
     final account = await sut!.auth!(params: params!);
 
-    expect(account.token, accessToken);
+    expect(account.token, validData["accessToken"]);
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 200 com dados inválidos.", () async{
 
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
-        .thenAnswer((_) async => {"invalid_key" : "invalid_value"});
+    mockClientGenericData({"invalid_key" : "invalid_value"});
 
     final future = sut!.auth!(params: params!);
 
