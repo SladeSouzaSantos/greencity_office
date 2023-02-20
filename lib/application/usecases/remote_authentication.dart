@@ -2,6 +2,7 @@ import '../../domain/entities/entities.dart';
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
 import '../clients/clients.dart';
+import '../models/models.dart';
 
 class RemoteAuthentication{
   final ClientGeneric clientGeneric;
@@ -21,7 +22,7 @@ class RemoteAuthentication{
           method: "post",
           body: body
       );
-      return AccountEntity.fromJson(clientGenericResponse!);
+      return RemoteAccountModel.fromJson(clientGenericResponse!).toEntity();
     }on ClientError catch(error){
       throw error == ClientError.unauthorized
           ? DomainError.invalidCredentialsError
