@@ -23,6 +23,9 @@ void main(){
   });
 
   test("Deve chamar ClientGeneric com valores corretos.", () async{
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
+        .thenAnswer((_) async => {"accessToken" : faker.guid.guid(), "name" : faker.person.name()});
+
     await sut!.auth!(params: params!);
 
     verify(clientGeneric!.request!(
@@ -33,30 +36,45 @@ void main(){
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 400.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body"))).thenThrow(HttpError.badRequest);
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
+        .thenThrow(ClientError.badRequest);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 404.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body"))).thenThrow(HttpError.notFound);
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
+        .thenThrow(ClientError.notFound);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 500.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body"))).thenThrow(HttpError.serverError);
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
+        .thenThrow(ClientError.serverError);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar invalidCredentialsError quando ClientGeneric retornar 401.", () async{
-    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body"))).thenThrow(HttpError.unauthorized);
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
+        .thenThrow(ClientError.unauthorized);
     final future = sut!.auth!(params: params!);
 
     expect(future, throwsA(DomainError.invalidCredentialsError));
+  });
+
+  test("Deve retornar um Account quando ClientGeneric retornar 200.", () async{
+    final accessToken = faker.guid.guid();
+
+    when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")))
+        .thenAnswer((_) async => {"accessToken" : accessToken, "name" : faker.person.name()});
+
+    final account = await sut!.auth!(params: params!);
+
+    expect(account.token, accessToken);
   });
 }
