@@ -39,10 +39,12 @@ dependencies:
   firebase_core: ^2.6.1
   firebase_auth: ^4.2.8
   cloud_firestore: ^4.4.2
+  http:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mocktail: ^0.3.0
   test:
   mockito:
   faker:

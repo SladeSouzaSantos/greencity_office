@@ -18,7 +18,7 @@ void main(){
   Map mockValidData() => {"accessToken" : faker.guid.guid(), "name" : faker.person.name()};
 
   PostExpectation mockRequest() =>
-      when(clientGeneric!.request(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")));
+      when(clientGeneric!.request!(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")));
 
   void mockClientGenericData(Map data){
     return mockRequest().thenAnswer((_) async => data);

@@ -1,3 +1,0 @@
-class DoNotReceiveAccountException implements Exception{}
-class SendEmailInvalidException implements Exception{}
-class ReceiverEmailInvalidException implements Exception{}
