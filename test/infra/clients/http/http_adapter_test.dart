@@ -25,6 +25,13 @@ class HttpAdapter{
 
 void main(){
   late String url;
+  ClientSpy? client;
+  HttpAdapter? sut;
+
+  setUp((){
+    client = ClientSpy();
+    sut = HttpAdapter(client: client!);
+  });
 
   setUpAll(() {
     url = faker.internet.httpUrl();
@@ -34,20 +41,19 @@ void main(){
 
   group("post", (){
     test("Deve chamar post com valores corretos.", () async{
-      final client = ClientSpy();
-      final sut = HttpAdapter(client: client);
+
 
       final headers = {
         'content-type' : 'application/json',
         'accept' : 'application/json'
       };
 
-      when(() => client.post(any(), headers: headers))
+      when(() => client!.post!(any(), headers: headers))
           .thenAnswer((_) async => Response('{}', 200));
 
       await sut!.request!(url: url, method: "post");
 
-      verify(() => client.post(
+      verify(() => client!.post!(
           Uri.parse(url),
           headers: {
             'content-type' : 'application/json',
