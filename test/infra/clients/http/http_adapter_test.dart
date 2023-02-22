@@ -14,7 +14,11 @@ class HttpAdapter{
     required String url,
     required String method
   }) async{
-    await client.post(Uri.parse(url))!;
+    final headers = {
+      'content-type' : 'application/json',
+      'accept' : 'application/json'
+    };
+    await client.post(Uri.parse(url), headers: headers)!;
   }
 }
 
@@ -33,12 +37,23 @@ void main(){
       final client = ClientSpy();
       final sut = HttpAdapter(client: client);
 
-      when(() => client.post(any()))
+      final headers = {
+        'content-type' : 'application/json',
+        'accept' : 'application/json'
+      };
+
+      when(() => client.post(any(), headers: headers))
           .thenAnswer((_) async => Response('{}', 200));
 
       await sut!.request!(url: url, method: "post");
 
-      verify(() => client.post(Uri.parse(url)));
+      verify(() => client.post(
+          Uri.parse(url),
+          headers: {
+            'content-type' : 'application/json',
+            'accept' : 'application/json'
+          }
+      ));
     });
   });
 }
