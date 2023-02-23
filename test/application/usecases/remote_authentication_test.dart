@@ -1,5 +1,5 @@
 import 'package:faker/faker.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import 'package:greencity_sustentavel_office/domain/helpers/helpers.dart';
 import 'package:greencity_sustentavel_office/domain/usecases/usecases.dart';
@@ -10,15 +10,15 @@ class ClientGenericSpy extends Mock implements ClientGeneric{}
 
 void main(){
 
-  RemoteAuthentication? sut;
-  ClientGenericSpy? clientGeneric;
-  String? url;
-  AuthenticationParams? params;
+  late RemoteAuthentication sut;
+  late ClientGenericSpy clientGeneric;
+  late String url;
+  late AuthenticationParams params;
 
   Map mockValidData() => {"accessToken" : faker.guid.guid(), "name" : faker.person.name()};
 
-  PostExpectation mockRequest() =>
-      when(clientGeneric!.request!(url: anyNamed("url"), method: anyNamed("method"), body: anyNamed("body")));
+  When mockRequest() =>
+      when(() => clientGeneric.request(url: any(named: "url"), method: any(named: "method"), body: any(named: "body")));
 
   void mockClientGenericData(Map data){
     return mockRequest().thenAnswer((_) async => data);
@@ -31,45 +31,45 @@ void main(){
   setUp((){
     clientGeneric = ClientGenericSpy();
     url = faker.internet.httpsUrl();
-    sut = RemoteAuthentication(clientGeneric: clientGeneric!, url: url!);
+    sut = RemoteAuthentication(clientGeneric: clientGeneric, url: url);
     params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
     mockClientGenericData(mockValidData());
   });
 
   test("Deve chamar ClientGeneric com valores corretos.", () async{
-    await sut!.auth!(params: params!);
+    await sut.auth(params: params);
 
-    verify(clientGeneric!.request!(
-        url: url!,
+    verify(() => clientGeneric.request(
+        url: url,
         method: "post",
-        body: {"email": params!.email, "password" : params!.password}
+        body: {"email": params.email, "password" : params.password}
     ));
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 400.", () async{
     mockClientGenericError(ClientError.badRequest);
-    final future = sut!.auth!(params: params!);
+    final future = sut.auth(params: params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 404.", () async{
     mockClientGenericError(ClientError.notFound);
-    final future = sut!.auth!(params: params!);
+    final future = sut.auth(params: params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar UnexpectedError quando ClientGeneric retornar 500.", () async{
     mockClientGenericError(ClientError.serverError);
-    final future = sut!.auth!(params: params!);
+    final future = sut.auth(params: params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test("Deve chamar invalidCredentialsError quando ClientGeneric retornar 401.", () async{
     mockClientGenericError(ClientError.unauthorized);
-    final future = sut!.auth!(params: params!);
+    final future = sut.auth(params: params);
 
     expect(future, throwsA(DomainError.invalidCredentialsError));
   });
@@ -78,7 +78,7 @@ void main(){
     final validData = mockValidData();
     mockClientGenericData(validData);
 
-    final account = await sut!.auth!(params: params!);
+    final account = await sut.auth(params: params);
 
     expect(account.token, validData["accessToken"]);
   });
@@ -87,7 +87,7 @@ void main(){
 
     mockClientGenericData({"invalid_key" : "invalid_value"});
 
-    final future = sut!.auth!(params: params!);
+    final future = sut.auth(params: params);
 
     expect(future, throwsA(DomainError.unexpected));
   });

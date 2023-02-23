@@ -46,7 +46,6 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^0.3.0
   test:
-  mockito:
   faker:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
