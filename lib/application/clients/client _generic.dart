@@ -1,5 +1,5 @@
 abstract class ClientGeneric{
-  Future<Map>? request(
+  Future<Map> request(
       {
         String? url,
         String? method,
