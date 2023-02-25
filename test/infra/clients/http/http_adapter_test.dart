@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 
 import '../mocks/client_spy.dart';
 
+import 'package:greencity_sustentavel_office/application/clients/clients.dart';
 import 'package:greencity_sustentavel_office/infra/clients/clients.dart';
 
 void main(){
@@ -73,6 +74,22 @@ void main(){
       final response = await sut.request(url: url, method: "post");
 
       expect(response, null);
+    });
+
+    test("Deve retornar BadRequestError se post retornar 400 sem dados.", () async{
+      client.mockPost(400, body: '');
+
+      final future = sut.request(url: url, method: "post");
+
+      expect(future, throwsA(ClientError.badRequest));
+    });
+
+    test("Deve retornar BadRequestError se post retornar 400.", () async{
+      client.mockPost(400);
+
+      final future = sut.request(url: url, method: "post");
+
+      expect(future, throwsA(ClientError.badRequest));
     });
 
   });
