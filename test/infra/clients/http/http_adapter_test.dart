@@ -1,39 +1,10 @@
-import 'dart:convert';
 import 'package:faker/faker.dart';
-import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import 'package:greencity_sustentavel_office/application/clients/clients.dart';
-
 import '../mocks/client_spy.dart';
 
-class HttpAdapter implements ClientGeneric{
-  final Client client;
-
-  HttpAdapter({required this.client});
-
-  @override
-  Future<Map?> request({
-    String? url,
-    String? method,
-    Map? body
-  }) async{
-    final headers = {
-      'content-type' : 'application/json',
-      'accept' : 'application/json'
-    };
-    final response = await client.post(Uri.parse(url!), headers: headers, body: body != null ? jsonEncode(body) : null);
-
-    if(response.statusCode == 200){
-      return response.body.isEmpty ? null : jsonDecode(response.body);
-    }else{
-      return null;
-    }
-
-  }
-}
-
+import 'package:greencity_sustentavel_office/infra/clients/clients.dart';
 
 void main(){
   late String url;
