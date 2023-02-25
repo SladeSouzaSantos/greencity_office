@@ -3,5 +3,6 @@ enum ClientError{
   notFound,
   serverError,
   unauthorized,
+  forbidden,
   invalidData
 }

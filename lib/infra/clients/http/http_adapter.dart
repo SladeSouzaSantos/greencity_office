@@ -34,6 +34,12 @@ class HttpAdapter implements ClientGeneric{
       return null;
     }else if(response.statusCode == 400){
       throw ClientError.badRequest;
+    }else if(response.statusCode == 401){
+      throw ClientError.unauthorized;
+    }else if(response.statusCode == 403){
+      throw ClientError.forbidden;
+    }else if(response.statusCode == 404){
+      throw ClientError.notFound;
     }else{
       throw ClientError.serverError;
     }
