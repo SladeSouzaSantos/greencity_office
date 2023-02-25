@@ -92,5 +92,13 @@ void main(){
       expect(future, throwsA(ClientError.badRequest));
     });
 
+    test("Deve retornar ServerError se post retornar 500.", () async{
+      client.mockPost(500);
+
+      final future = sut.request(url: url, method: "post");
+
+      expect(future, throwsA(ClientError.serverError));
+    });
+
   });
 }

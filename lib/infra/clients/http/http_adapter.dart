@@ -32,8 +32,10 @@ class HttpAdapter implements ClientGeneric{
       return response.body.isEmpty ? null : jsonDecode(response.body);
     }else if(response.statusCode == 204){
       return null;
-    }else{
+    }else if(response.statusCode == 400){
       throw ClientError.badRequest;
+    }else{
+      throw ClientError.serverError;
     }
 
   }
