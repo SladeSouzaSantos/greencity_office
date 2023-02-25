@@ -22,6 +22,14 @@ void main(){
     registerFallbackValue(Uri.parse(url));
   });
 
+  group("shared", () {
+    test("Deve passar ServerError se metodo for invalido.", () async{
+      final future = sut.request(url: url, method: "invalid_method");
+
+      expect(future, throwsA(ClientError.serverError));
+    });
+  });
+
   group("post", (){
 
     test("Deve chamar post com valores corretos.", () async{
