@@ -25,7 +25,12 @@ class HttpAdapter implements ClientGeneric{
     };
     final response = await client.post(Uri.parse(url!), headers: headers, body: body != null ? jsonEncode(body) : null);
 
-    return response.body.isEmpty ? null : jsonDecode(response.body);
+    if(response.statusCode == 200){
+      return response.body.isEmpty ? null : jsonDecode(response.body);
+    }else{
+      return null;
+    }
+
   }
 }
 
@@ -69,13 +74,13 @@ void main(){
       ));
     });
 
-    test("Deve retornar dados se post returnar 200.", () async{
+    test("Deve retornar dados se post retornar 200.", () async{
       final response = await sut.request(url: url, method: "post");
 
       expect(response, {"any_key":"any_value"});
     });
 
-    test("Deve retornar dados se post returnar 200 sem dados.", () async{
+    test("Deve retornar dados se post retornar 200 sem dados.", () async{
       client.mockPost(200, body: '');
 
       final response = await sut.request(url: url, method: "post");
@@ -83,8 +88,16 @@ void main(){
       expect(response, null);
     });
 
-    test("Deve retornar null se post returnar 204.", () async{
+    test("Deve retornar null se post retornar 204.", () async{
       client.mockPost(204, body: '');
+
+      final response = await sut.request(url: url, method: "post");
+
+      expect(response, null);
+    });
+
+    test("Deve retornar null se post retornar 204 com dados.", () async{
+      client.mockPost(204);
 
       final response = await sut.request(url: url, method: "post");
 
