@@ -8,12 +8,13 @@ import 'package:greencity_sustentavel_office/application/clients/clients.dart';
 
 import '../mocks/client_spy.dart';
 
-class HttpAdapter implements HttpClient{
+class HttpAdapter implements ClientGeneric{
   final Client client;
 
   HttpAdapter({required this.client});
 
-  Future<Map> request({
+  @override
+  Future<Map?> request({
     String? url,
     String? method,
     Map? body
@@ -23,7 +24,8 @@ class HttpAdapter implements HttpClient{
       'accept' : 'application/json'
     };
     final response = await client.post(Uri.parse(url!), headers: headers, body: body != null ? jsonEncode(body) : null);
-    return jsonDecode(response.body);
+
+    return response.body.isEmpty ? null : jsonDecode(response.body);
   }
 }
 
@@ -67,10 +69,26 @@ void main(){
       ));
     });
 
-    test("Deve returnar dados se post returnar 200.", () async{
+    test("Deve retornar dados se post returnar 200.", () async{
       final response = await sut.request(url: url, method: "post");
 
       expect(response, {"any_key":"any_value"});
+    });
+
+    test("Deve retornar dados se post returnar 200 sem dados.", () async{
+      client.mockPost(200, body: '');
+
+      final response = await sut.request(url: url, method: "post");
+
+      expect(response, null);
+    });
+
+    test("Deve retornar null se post returnar 204.", () async{
+      client.mockPost(204, body: '');
+
+      final response = await sut.request(url: url, method: "post");
+
+      expect(response, null);
     });
 
   });
