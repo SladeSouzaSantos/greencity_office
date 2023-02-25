@@ -24,6 +24,10 @@ class HttpAdapter implements ClientGeneric{
 
     final response = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
 
+    return _handleResponse(response: response);
+  }
+
+  Map? _handleResponse({required Response response}){
     if(response.statusCode == 200){
       return response.body.isEmpty ? null : jsonDecode(response.body);
     }else{
