@@ -6,7 +6,7 @@ import 'package:greencity_sustentavel_office/domain/usecases/usecases.dart';
 import 'package:greencity_sustentavel_office/application/clients/clients.dart';
 import 'package:greencity_sustentavel_office/application/usecases/usecases.dart';
 
-class ClientGenericSpy extends Mock implements ClientGeneric{}
+class ClientGenericSpy extends Mock implements HttpClient{}
 
 void main(){
 

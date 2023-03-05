@@ -4,23 +4,31 @@ import 'package:http/http.dart';
 
 import '../../../application/clients/clients.dart';
 
-class HttpAdapter implements ClientGeneric{
+class FirebaseHttpAdapter implements HttpClient{
   final Client client;
 
-  HttpAdapter({required this.client});
+  FirebaseHttpAdapter({required this.client});
 
   @override
   Future<Map?> request({
-    String? url,
-    String? method,
+    required String? url,
+    required String? method,
     Map? body
   }) async{
     final headers = {
       'content-type' : 'application/json',
-      'accept' : 'application/json'
+      //'accept' : 'application/json'
     };
 
-    final jsonBody = body != null ? jsonEncode(body) : null;
+    final String? jsonBody;
+
+    if(body != null){
+      body.addAll({"returnSecureToken":true});
+
+      jsonBody = jsonEncode(body);
+    }else {
+      jsonBody = null;
+    }
 
     var response = Response('', 500);
 

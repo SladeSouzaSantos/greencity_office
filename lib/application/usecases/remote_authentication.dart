@@ -5,17 +5,19 @@ import '../clients/clients.dart';
 import '../models/models.dart';
 
 class RemoteAuthentication implements Authentication{
-  final ClientGeneric clientGeneric;
-  final String? url;
+  final HttpClient clientGeneric;
+  late String url;
 
   RemoteAuthentication(
       {
         required this.clientGeneric,
-        this.url
+        required this.url
       });
 
+  @override
   Future<AccountEntity> auth({required AuthenticationParams params}) async{
     final body = RemoteAuthenticationParams.fromDomain(params: params).toJson();
+
     try{
       final clientGenericResponse = await clientGeneric.request(
           url: url,

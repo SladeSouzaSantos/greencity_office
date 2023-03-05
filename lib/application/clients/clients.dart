@@ -1,2 +1,2 @@
 export 'client_error.dart';
-export './client _generic.dart';
+export './http_client.dart';

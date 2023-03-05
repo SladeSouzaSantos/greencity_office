@@ -10,11 +10,11 @@ import 'package:greencity_sustentavel_office/infra/clients/clients.dart';
 void main(){
   late String url;
   late ClientSpy client;
-  late HttpAdapter sut;
+  late FirebaseHttpAdapter sut;
 
   setUp((){
     client = ClientSpy();
-    sut = HttpAdapter(client: client);
+    sut = FirebaseHttpAdapter(client: client);
   });
 
   setUpAll(() {
@@ -38,10 +38,9 @@ void main(){
       verify(() => client.post(
           Uri.parse(url),
           headers: {
-            'content-type' : 'application/json',
-            'accept' : 'application/json'
+            'content-type' : 'application/json'
           },
-        body: '{"any_key":"any_value"}'
+        body: '{"any_key":"any_value","returnSecureToken":true}'
       ));
     });
 
