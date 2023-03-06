@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="greencity.sustentavel.office.greencity_sustentavel_office">
    <application
         android:label="greencity_sustentavel_office"
         android:name="${applicationName}"
