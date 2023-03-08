@@ -56,7 +56,7 @@ class App extends StatelessWidget {
 
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      home: const LoginPage(presenter: null),
     );
   }
 }
