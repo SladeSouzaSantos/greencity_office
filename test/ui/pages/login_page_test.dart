@@ -3,9 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:greencity_sustentavel_office/ui/pages/pages.dart';
 
 void main(){
-  testWidgets("Deve carregar o state inicial corretamente.", (WidgetTester widgetTester) async{
+
+  Future<void> loadPage(WidgetTester widgetTester) async{
     const loginPage = MaterialApp(home: LoginPage());
     await widgetTester.pumpWidget(loginPage);
+  }
+
+  testWidgets("Deve carregar o state inicial corretamente.", (WidgetTester widgetTester) async{
+    await loadPage(widgetTester);
 
     final emailTextChildren = find.descendant(of: find.bySemanticsLabel("E-mail"), matching: find.byType(Text));
     expect(
@@ -27,4 +32,10 @@ void main(){
     expect(button.onPressed, null);
 
   });
+
+  testWidgets("Deve chamar o validate, com valores corretos.", (WidgetTester widgetTester) async{
+    await loadPage(widgetTester);
+
+  });
+
 }
