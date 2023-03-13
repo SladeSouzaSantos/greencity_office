@@ -129,4 +129,15 @@ void main(){
 
   });
 
+  testWidgets("Deve desabilitar button se form for inválido.", (WidgetTester widgetTester) async{
+    await loadPage(widgetTester);
+
+    isFormValidController.add(false);
+    await widgetTester.pump();
+
+    final button = widgetTester.widget<ElevatedButton>(find.byType(ElevatedButton));
+    expect(button.onPressed, null);
+
+  });
+
 }
